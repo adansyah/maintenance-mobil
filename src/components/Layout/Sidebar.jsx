@@ -1,7 +1,7 @@
 // File: src/components/Layout/Sidebar.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MENU_ITEMS } from './constants';
+import { MENU_ITEMS } from '../../data/constants';
 
 // Tambahkan prop isOpen dan onClose
 const Sidebar = ({ activeMenuId, onMenuItemClick, onLogout, isOpen, onClose }) => {
@@ -19,24 +19,24 @@ const Sidebar = ({ activeMenuId, onMenuItemClick, onLogout, isOpen, onClose }) =
    case 'dashboard':
     navigate('/dashboard');
     break;
-//    case 'kib':
-//     navigate('/data-induk');
-//     break;
-//    case 'reports':
-//     navigate('/laporan-kir');
-//     break;
-//    case 'print_labels':
-//     navigate('/label');
-//     break;
-//    case 'laporan':
-//     navigate('/laporan');
-//     break;
-//    case 'user':
-//     navigate('/user');
-//     break;
-//    case 'AddData':
-//     navigate('data-induk/tambah');
-//     break;
+   case 'kib':
+    navigate('/data-induk');
+    break;
+   case 'reports':
+    navigate('/laporan-kir');
+    break;
+   case 'print_labels':
+    navigate('/label');
+    break;
+   case 'laporan':
+    navigate('/laporan');
+    break;
+   case 'user':
+    navigate('/user');
+    break;
+   case 'AddData':
+    navigate('data-induk/tambah');
+    break;
    default:
     navigate('/dashboard');
   }

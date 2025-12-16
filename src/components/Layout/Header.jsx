@@ -1,5 +1,8 @@
+// Header.jsx (Tidak ada perubahan, kode Anda sudah siap)
 
 import React from 'react';
+
+
 
 const Header = ({ activeMenuLabel, onToggleSidebar }) => (
     <div className="bg-white px-4 sm:px-8 py-4 flex justify-between items-center shadow-sm sticky top-0 z-20 border-b border-gray-100 print:hidden">

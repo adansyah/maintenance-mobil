@@ -1,19 +1,29 @@
-import { Route, Routes } from "react-router-dom"
-import { Link } from "react-router-dom"
-import Login from "./components/Login"
-import DashboardContent from "./components/DashboardContent"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./components/Auth/Login";
+import Dashboard from "./components/Pages/Dashboard";
+import { ToastContainer } from 'react-toastify';
+
 
 function App() {
   return (
     <>
+      <BrowserRouter>
+      <ToastContainer />
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route 
-        path="/dashboard" 
-        element={
-        <DashboardContent initialMenuId="dashboard" 
-        />}  />
-      </Routes>
+        {/* Login */}
+        <Route path="/" element={
+          <Login />
+          } />
+
+        {/* ADMIN */}
+        <Route
+          path="/dashboard"
+          element={
+            <Dashboard initialMenuId="dashboard" />
+          }
+        />
+        </Routes>
+    </BrowserRouter>
     </>
   )
 }
