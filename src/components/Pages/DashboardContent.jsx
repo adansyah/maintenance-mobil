@@ -1,8 +1,65 @@
 import { Link } from 'react-router-dom';
+import { supabase } from '../../lib/supabase';
+import { useEffect, useState } from 'react';
 
 const PRIMARY_COLOR = 'indigo';
 
 const DashboardContent = () => {
+   const [totalPendapatan, setTotalPendapatan] = useState(0);
+  const [totalKendaraan, setTotalKendaraan] = useState(0);
+  const [servisBerat, setServisBerat] = useState(0);
+  const [analisis, setAnalisis] = useState([]);
+  const [layanan, setLayanan] = useState([]);
+
+  useEffect(() => {
+    fetchDashboard();
+  }, []);
+
+  const maxTotal = Math.max(...analisis.map(a => a.total));
+
+  const fetchDashboard = async () => {
+  const { data: booking } = await supabase
+    .from("booking")
+    .select("total_biaya, vechile_id, layanan_id")
+    .eq("status", "selesai");
+
+  const { data: layananData } = await supabase
+    .from("layanan")
+    .select("id, nama_layanan, harga")
+
+  if (booking) {
+    // total pendapatan
+    setTotalPendapatan(
+      booking.reduce(
+        (sum, b) => sum + Number(b.total_biaya || 0),
+        0
+      )
+    );
+
+    // kendaraan unik
+    setTotalKendaraan(
+      new Set(booking.map((b) => b.vechile_id)).size
+    );
+
+    // servis berat (>= 500k)
+    setServisBerat(
+      booking.filter((b) => Number(b.total_biaya) >= 500000).length
+    );
+
+    // analisis layanan
+    const map = {};
+    booking.forEach((b) => {
+      map[b.layanan_id] = (map[b.layanan_id] || 0) + 1;
+    });
+
+    setAnalisis(
+      Object.entries(map).map(([id, total]) => ({ id, total }))
+    );
+  }
+
+  setLayanan(layananData || []);
+};
+
   return (
     <div className="w-full text-gray-800">
 
@@ -10,7 +67,7 @@ const DashboardContent = () => {
       <div className="flex justify-between items-end mb-6 border-b border-gray-200 pb-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-            Dashboard Maintenance Bengkel
+            Maintenance Mobil
           </h1>
           <p className="text-sm text-gray-500">
             Ringkasan servis kendaraan bulan ini
@@ -39,7 +96,7 @@ const DashboardContent = () => {
             <div className="mt-1 flex items-baseline gap-1">
               <span className="text-sm text-gray-500">Rp</span>
               <span className={`text-2xl font-bold text-${PRIMARY_COLOR}-600`}>
-                12.500.000
+                {totalPendapatan.toLocaleString("id-ID")}
               </span>
             </div>
           </div>
@@ -47,11 +104,11 @@ const DashboardContent = () => {
           {/* Total Kendaraan */}
           <div className="px-4">
             <span className="text-xs font-bold text-gray-400 uppercase">
-              Kendaraan Diservis
+              Kendaraan 
             </span>
             <div className="mt-1 flex items-baseline gap-2">
               <span className="text-2xl font-bold text-gray-800">
-                38
+                {totalKendaraan}
               </span>
               <span className="text-sm text-gray-500 bg-white border px-2 py-0.5 rounded-full">
                 Unit
@@ -63,15 +120,15 @@ const DashboardContent = () => {
           <div className="px-4">
             <div className="flex justify-between items-center">
               <span className="text-xs font-bold text-red-500 uppercase">
-                Servis Berat
+                Servis
               </span>
-              <Link to="/servis-berat" className="text-xs text-red-600 hover:underline">
+              {/* <Link to={"/servis"} className="text-xs text-red-600 hover:underline">
                 Detail →
-              </Link>
+              </Link> */}
             </div>
             <div className="mt-1 flex items-baseline gap-2">
               <span className="text-3xl font-extrabold text-red-600">
-                6
+                {servisBerat}
               </span>
               <span className="text-xs text-red-400">
                 Kendaraan
@@ -86,65 +143,66 @@ const DashboardContent = () => {
 
         {/* ANALISIS JENIS SERVIS */}
         <div className="lg:col-span-2">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-bold text-gray-900">
-              Analisis Jenis Servis
-            </h3>
-          </div>
+  {/* JUDUL */}
+  <div className="flex justify-between items-center mb-4">
+    <h3 className="text-lg font-bold text-gray-900">
+      Analisis Jenis Servis
+    </h3>
+  </div>
 
-          <div className="relative h-[220px] w-full pt-6">
-            <div className="absolute inset-0 flex flex-col justify-between text-xs text-gray-300">
-              <div className="border-b border-dashed"></div>
-              <div className="border-b border-dashed"></div>
-              <div className="border-b border-dashed"></div>
-              <div className="border-b"></div>
+  {/* AREA GRAFIK */}
+  <div className="relative h-[220px] w-full pt-6">
+    {/* GARIS LATAR */}
+    <div className="absolute inset-0 flex flex-col justify-between text-xs text-gray-300">
+      <div className="border-b border-dashed"></div>
+      <div className="border-b border-dashed"></div>
+      <div className="border-b border-dashed"></div>
+      <div className="border-b"></div>
+    </div>
+
+    {/* BAR */}
+    {console.log("ANALISIS:", analisis)}
+
+    <div
+      className={`absolute inset-0 grid gap-8 items-end px-4`}
+      style={{
+        gridTemplateColumns: `repeat(${analisis.length}, minmax(0, 1fr))`,
+      }}
+    >
+      {analisis.map((a) => {
+        const l = layanan.find((x) => x.id == a.id);
+        if (!l) return null;
+
+        return (
+          <div
+            key={a.id}
+            className="flex flex-col items-center justify-end group"
+          >
+            {/* Tooltip */}
+            <div className="opacity-0 group-hover:opacity-100 mb-1 text-xs bg-white px-2 rounded shadow">
+              {a.total} Servis
             </div>
 
-            <div className="absolute inset-0 grid grid-cols-3 gap-8 items-end px-4">
+            {/* BATANG */}
+           <div
+              className="w-full max-w-[80px] bg-indigo-500 rounded-t-sm transition-all duration-500"
+              style={{
+                height: `${(a.total / maxTotal) * 100}%`,
+                minHeight: "100px",
+              }}
+            />
 
-              {/* Ganti Oli */}
-              <div className="flex flex-col items-center justify-end group">
-                <div className="opacity-0 group-hover:opacity-100 mb-1 text-xs bg-white px-2 rounded shadow">
-                  15 Servis
-                </div>
-                <div className={`w-full max-w-[80px] h-[70%] bg-${PRIMARY_COLOR}-500 rounded-t-sm relative`}>
-                  <div className="absolute top-2 w-full text-center text-xs text-white">
-                    40%
-                  </div>
-                </div>
-                <p className="mt-3 text-sm font-semibold">Ganti Oli</p>
-              </div>
-
-              {/* Tune Up */}
-              <div className="flex flex-col items-center justify-end group">
-                <div className="opacity-0 group-hover:opacity-100 mb-1 text-xs bg-white px-2 rounded shadow">
-                  13 Servis
-                </div>
-                <div className={`w-full max-w-[80px] h-[60%] bg-${PRIMARY_COLOR}-400 rounded-t-sm`}>
-                  <div className="absolute top-2 w-full text-center text-xs text-white">
-                    35%
-                  </div>
-                </div>
-                <p className="mt-3 text-sm font-semibold">Tune Up</p>
-              </div>
-
-              {/* Servis Rem */}
-              <div className="flex flex-col items-center justify-end group">
-                <div className="opacity-0 group-hover:opacity-100 mb-1 text-xs bg-white px-2 rounded shadow">
-                  10 Servis
-                </div>
-                <div className="w-full max-w-[80px] h-[45%] bg-red-500 rounded-t-sm">
-                  <div className="absolute top-2 w-full text-center text-xs text-white">
-                    25%
-                  </div>
-                </div>
-                <p className="mt-3 text-sm font-semibold">Servis Rem</p>
-              </div>
-
-            </div>
+            {/* Label */}
+            <p className="mt-3 text-sm font-semibold text-gray-700 text-center">
+              {l.nama_layanan}
+            </p>
           </div>
-        </div>
 
+        );
+      })}
+    </div>
+  </div>
+</div>
         {/* DAFTAR LAYANAN */}
         <div className="border-l border-gray-100 pl-0 lg:pl-8">
           <h3 className="text-lg font-bold mb-5">

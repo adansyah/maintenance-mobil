@@ -2,9 +2,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MENU_ITEMS } from '../../data/constants';
+import { supabase } from '../../lib/supabase';
+import { toast } from 'react-toastify';
 
 // Tambahkan prop isOpen dan onClose
-const Sidebar = ({ activeMenuId, onMenuItemClick, onLogout, isOpen, onClose }) => {
+const Sidebar = ({ activeMenuId, onMenuItemClick, isOpen, onClose }) => {
  const navigate = useNavigate();
 
  const handleClick = (item) => {
@@ -39,6 +41,22 @@ const Sidebar = ({ activeMenuId, onMenuItemClick, onLogout, isOpen, onClose }) =
     navigate('/dashboard');
   }
  };
+
+
+const onLogout = async () => {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    toast.error("Gagal logout");
+    return;
+  }
+
+  // opsional, kalau cuma simpan nama
+  localStorage.removeItem("name");
+
+  toast.success("Berhasil logout 👋");
+  navigate("/");
+};
 
  return (
   <>
@@ -116,7 +134,7 @@ const Sidebar = ({ activeMenuId, onMenuItemClick, onLogout, isOpen, onClose }) =
       <span>Keluar Sistem</span>
      </button>
      <p className="mt-2 text-[10px] text-indigo-200 text-center">
-      Anda login sebagai {localStorage.getItem("role") || "Administrator"}
+      Anda login sebagai {localStorage.getItem("name") || "Admin Default"}
      </p>
     </div>
    </div>

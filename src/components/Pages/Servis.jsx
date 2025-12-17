@@ -1,189 +1,218 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "../../lib/supabase";
+import { toast } from "react-toastify";
 
 function Servis() {
-  // Mock data kendaraan pelanggan
-  const vehicles = [
-    {
-      id: 1,
-      plat: "D 1234 AB",
-      name: "Toyota Avanza 2020",
-    },
-    {
-      id: 2,
-      plat: "B 9876 CD",
-      name: "Honda Brio 2019",
-    },
-  ];
-
-  // Mock data layanan servis
-  const services = [
-    { id: 1, name: "Ganti Oli Mesin", price: 150000 },
-    { id: 2, name: "Tune Up Mesin", price: 300000 },
-    { id: 3, name: "Servis Rem", price: 250000 },
-    { id: 4, name: "Spooring & Balancing", price: 400000 },
-  ];
-
-  const [selectedVehicle, setSelectedVehicle] = useState("");
+  const [vechile, setvechile] = useState([]);
+  const [services, setServices] = useState([]);
+  const [selectedVechile, setselectedVechile] = useState("");
   const [selectedServices, setSelectedServices] = useState([]);
   const [tanggal, setTanggal] = useState("");
   const [catatan, setCatatan] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  // ================= FETCH DATA =================
+  useEffect(() => {
+    fetcVechile();
+    fetchService();
+  }, []);
+
+  const fetcVechile = async () => {
+    const { data, error } = await supabase
+      .from("vechile")
+      .select("id, no_polisi, merk, model, tahun")
+      .order("created_at", { ascending: false });
+
+    if (!error) setvechile(data);
+  };
+
+  const fetchService = async () => {
+    const { data, error } = await supabase
+      .from("layanan")
+      .select("id, nama_layanan, harga")
+      .order("nama_layanan");
+
+    if (!error) setServices(data);
+  };
+
+  // ================= LOGIC =================
   const toggleService = (service) => {
     setSelectedServices((prev) =>
-      prev.includes(service)
-        ? prev.filter((s) => s !== service)
+      prev.find((s) => s.id === service.id)
+        ? prev.filter((s) => s.id !== service.id)
         : [...prev, service]
     );
   };
 
   const totalHarga = selectedServices.reduce(
-    (total, s) => total + s.price,
+    (total, s) => total + Number(s.harga),
     0
   );
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // ================= SUBMIT =================
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    const payload = {
-      vehicle_id: selectedVehicle,
-      services: selectedServices,
-      tanggal,
-      catatan,
-      total: totalHarga,
-    };
+  if (!selectedVechile || selectedServices.length === 0) {
+    alert("Pilih kendaraan & layanan");
+    setLoading(false);
+    return;
+  }
 
-    console.log("Data Servis:", payload);
-    alert("Booking servis berhasil!");
-  };
+  // buat banyak booking (1 layanan = 1 booking)
+  const payload = selectedServices.map((service) => ({
+    vechile_id: selectedVechile,
+    layanan_id: service.id,
+    tanggal_servis: tanggal,
+    keluhan: catatan,
+    total_biaya: totalHarga,
+    status: "proses",
+  }));
 
+  const { error } = await supabase
+    .from("booking")
+    .insert(payload);
+
+  if (error) {
+    console.error(error);
+    toast.error("Gagal Booking Servis");
+  } else {
+    toast.success("Booking servis berhasil 🚗🔧");
+  }
+
+  // reset form
+  setselectedVechile("");
+  setSelectedServices([]);
+  setTanggal("");
+  setCatatan("");
+  setLoading(false);
+};
+
+
+  // ================= UI =================
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-8">
+      <div className="max-w-1xl mx-auto">
 
-      {/* HEADER */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Booking Servis Kendaraan
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          Booking Servis Bengkel
         </h1>
-        <p className="text-sm text-gray-500">
-          Pilih kendaraan dan layanan servis yang dibutuhkan
+        <p className="text-sm text-gray-500 mb-6">
+          Isi data kendaraan dan pilih layanan servis
         </p>
-      </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm max-w-full"
-      >
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white border rounded-xl p-6 shadow-sm"
+        >
 
-        {/* PILIH KENDARAAN */}
-        <div className="mb-6">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Pilih Kendaraan
-          </label>
-          <select
-            value={selectedVehicle}
-            onChange={(e) => setSelectedVehicle(e.target.value)}
-            className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
-            required
-          >
-            <option value="">-- Pilih Kendaraan --</option>
-            {vehicles.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.plat} - {v.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* PILIH LAYANAN */}
-        <div className="mb-6">
-          <label className="block text-sm font-semibold text-gray-700 mb-3">
-            Pilih Layanan Servis
-          </label>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {services.map((service) => {
-              const active = selectedServices.includes(service);
-              return (
-                <div
-                  key={service.id}
-                  onClick={() => toggleService(service)}
-                  className={`cursor-pointer border rounded-lg p-4 transition
-                    ${
-                      active
-                        ? "border-indigo-600 bg-indigo-50"
-                        : "border-gray-200 hover:border-indigo-400"
-                    }
-                  `}
-                >
-                  <div className="flex justify-between items-center">
-                    <h4 className="font-semibold text-gray-800">
-                      {service.name}
-                    </h4>
-                    <span className="text-sm font-bold text-indigo-600">
-                      Rp {service.price.toLocaleString("id-ID")}
-                    </span>
-                  </div>
-
-                  {active && (
-                    <p className="text-xs text-indigo-600 mt-2">
-                      ✔ Dipilih
-                    </p>
-                  )}
-                </div>
-              );
-            })}
+          {/* Kendaraan */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold mb-2">
+              Kendaraan
+            </label>
+            <select
+              value={selectedVechile}
+              onChange={(e) => setselectedVechile(e.target.value)}
+              className="w-full border rounded-lg px-4 py-2"
+              required
+            >
+              <option value="">-- Pilih Kendaraan --</option>
+              {vechile.map((v) => (
+                <option key={v.id} value={v.id}>
+                  {v.no_polisi} - {v.merk} {v.model} ({v.tahun})
+                </option>
+              ))}
+            </select>
           </div>
-        </div>
 
-        {/* TANGGAL SERVIS */}
-        <div className="mb-6">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Tanggal Servis
-          </label>
-          <input
-            type="date"
-            value={tanggal}
-            onChange={(e) => setTanggal(e.target.value)}
-            className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
-            required
-          />
-        </div>
+          {/* Layanan */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold mb-3">
+              Layanan Servis
+            </label>
 
-        {/* CATATAN */}
-        <div className="mb-6">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Catatan Tambahan
-          </label>
-          <textarea
-            value={catatan}
-            onChange={(e) => setCatatan(e.target.value)}
-            rows="3"
-            placeholder="Contoh: bunyi aneh di bagian mesin..."
-            className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
-          ></textarea>
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {services.map((s) => {
+                const active = selectedServices.find((x) => x.id === s.id);
+                return (
+                  <div
+                    key={s.id}
+                    onClick={() => toggleService(s)}
+                    className={`cursor-pointer border rounded-lg p-4 transition
+                      ${
+                        active
+                          ? "border-indigo-600 bg-indigo-50"
+                          : "hover:border-indigo-400"
+                      }`}
+                  >
+                    <div className="flex justify-between">
+                      <span className="font-semibold">
+                        {s.nama_layanan}
+                      </span>
+                      <span className="font-bold text-indigo-600">
+                        Rp {Number(s.harga).toLocaleString("id-ID")}
+                      </span>
+                    </div>
+                    {active && (
+                      <p className="text-xs text-indigo-600 mt-2">
+                        ✔ Dipilih
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
-        {/* TOTAL */}
-        <div className="flex justify-between items-center border-t pt-4">
-          <span className="font-semibold text-gray-700">
-            Estimasi Biaya
-          </span>
-          <span className="text-xl font-bold text-indigo-600">
-            Rp {totalHarga.toLocaleString("id-ID")}
-          </span>
-        </div>
+          {/* Tanggal */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold mb-2">
+              Tanggal Servis
+            </label>
+            <input
+              type="date"
+              value={tanggal}
+              onChange={(e) => setTanggal(e.target.value)}
+              className="w-full border rounded-lg px-4 py-2"
+              required
+            />
+          </div>
 
-        {/* SUBMIT */}
-        <div className="mt-6 text-right">
-          <button
-            type="submit"
-            className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
-          >
-            Booking Servis
-          </button>
-        </div>
+          {/* Catatan */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold mb-2">
+              Keluhan / Catatan
+            </label>
+            <textarea
+              rows="3"
+              value={catatan}
+              onChange={(e) => setCatatan(e.target.value)}
+              className="w-full border rounded-lg px-4 py-2"
+            />
+          </div>
 
-      </form>
+          {/* Total */}
+          <div className="flex justify-between items-center border-t pt-4">
+            <span className="font-semibold">Estimasi Biaya</span>
+            <span className="text-xl font-bold text-indigo-600">
+              Rp {totalHarga.toLocaleString("id-ID")}
+            </span>
+          </div>
+
+          {/* Submit */}
+          <div className="text-right mt-6">
+            <button
+              disabled={loading}
+              className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"
+            >
+              {loading ? "Menyimpan..." : "Booking Servis"}
+            </button>
+          </div>
+
+        </form>
+      </div>
     </div>
   );
 }
