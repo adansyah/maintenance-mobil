@@ -104,7 +104,7 @@ function Servis() {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white border rounded-xl p-6 shadow-sm"
+          className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm"
         >
 
           {/* Kendaraan */}
@@ -115,7 +115,7 @@ function Servis() {
             <select
               value={selectedVechile}
               onChange={(e) => setselectedVechile(e.target.value)}
-              className="w-full border rounded-lg px-4 py-2"
+              className="w-full border border-zinc-200 shadow-md rounded-lg px-4 py-2 text-gray-500"
               required
             >
               <option value="">-- Pilih Kendaraan --</option>
@@ -140,7 +140,7 @@ function Servis() {
                   <div
                     key={s.id}
                     onClick={() => toggleService(s)}
-                    className={`cursor-pointer border rounded-lg p-4 transition
+                    className={`cursor-pointer border border-zinc-200 shadow-md rounded-lg p-4 transition
                       ${
                         active
                           ? "border-indigo-600 bg-indigo-50"
@@ -148,10 +148,10 @@ function Servis() {
                       }`}
                   >
                     <div className="flex justify-between">
-                      <span className="font-semibold">
+                      <span className="font-sans">
                         {s.nama_layanan}
                       </span>
-                      <span className="font-bold text-indigo-600">
+                      <span className="font-bold text-black">
                         Rp {Number(s.harga).toLocaleString("id-ID")}
                       </span>
                     </div>
@@ -175,7 +175,7 @@ function Servis() {
               type="date"
               value={tanggal}
               onChange={(e) => setTanggal(e.target.value)}
-              className="w-full border rounded-lg px-4 py-2"
+              className="w-full border border-zinc-200 shadow-md text-gray-500 rounded-lg px-4 py-2"
               required
             />
           </div>
@@ -189,14 +189,15 @@ function Servis() {
               rows="3"
               value={catatan}
               onChange={(e) => setCatatan(e.target.value)}
-              className="w-full border rounded-lg px-4 py-2"
+              className="w-full border border-zinc-200 shadow-md rounded-lg px-4 py-2"
+              placeholder="(Optional)"
             />
           </div>
 
           {/* Total */}
           <div className="flex justify-between items-center border-t pt-4">
             <span className="font-semibold">Estimasi Biaya</span>
-            <span className="text-xl font-bold text-indigo-600">
+            <span className="text-xl font-bold">
               Rp {totalHarga.toLocaleString("id-ID")}
             </span>
           </div>
@@ -205,7 +206,7 @@ function Servis() {
           <div className="text-right mt-6">
             <button
               disabled={loading}
-              className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"
+              className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 cursor-pointer"
             >
               {loading ? "Menyimpan..." : "Booking Servis"}
             </button>

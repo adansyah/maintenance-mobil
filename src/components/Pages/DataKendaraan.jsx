@@ -132,7 +132,7 @@ function DataKendaraan() {
       </div>
 
       {/* FORM */}
-      <div className="bg-white border rounded-xl p-6 mb-8 shadow-sm">
+      <div className="bg-white border border-gray-300 rounded-lg p-6 mb-8 shadow-sm">
         <h2 className="font-semibold mb-4">
           {editId ? "✏️ Edit Kendaraan" : "➕ Tambah Kendaraan"}
         </h2>
@@ -142,20 +142,20 @@ function DataKendaraan() {
           className="grid grid-cols-1 md:grid-cols-3 gap-4"
         >
           <input name="no_polisi" value={form.no_polisi} onChange={handleChange}
-            placeholder="No Polisi" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
+            placeholder="No Polisi" className="border border-gray-500 shadow-md rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
           <input name="nama_pemilik" value={form.nama_pemilik} onChange={handleChange}
-            placeholder="Nama Pemilik" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
+            placeholder="Nama Pemilik" className="border border-gray-500 shadow-md rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
           <input name="merk" value={form.merk} onChange={handleChange}
-            placeholder="Merk" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
+            placeholder="Merk" className="border border-gray-500 shadow-md rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
           <input name="model" value={form.model} onChange={handleChange}
-            placeholder="Model" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
+            placeholder="Model" className="border border-gray-500 shadow-md rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
           <input name="tahun" type="number" value={form.tahun} onChange={handleChange}
-            placeholder="Tahun" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
+            placeholder="Tahun" className="border border-gray-500 shadow-md rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
 
           <div className="flex gap-2">
             <button
               type="submit"
-              className="bg-indigo-600 text-white rounded-lg px-4 py-2 hover:bg-indigo-700"
+              className="bg-indigo-600 text-white rounded-lg px-4 py-2 hover:bg-indigo-700 cursor-pointer"
             >
               {editId ? "Update" : "Simpan"}
             </button>
@@ -172,6 +172,7 @@ function DataKendaraan() {
           </div>
         </form>
       </div>
+      
 
       {/* LIST */}
       {loading ? (
@@ -179,7 +180,7 @@ function DataKendaraan() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {vechiles.map((v) => (
-            <div key={v.id} className="bg-white border rounded-xl p-5 shadow-sm">
+            <div key={v.id} className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
               <h3 className="font-semibold mb-1">🚗 {v.no_polisi}</h3>
               <p className="text-sm text-gray-600">{v.nama_pemilik}</p>
               <p className="text-sm text-gray-600">

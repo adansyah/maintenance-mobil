@@ -21,6 +21,9 @@ const Sidebar = ({ activeMenuId, onMenuItemClick, isOpen, onClose }) => {
    case 'beranda':
     navigate('/dashboard');
     break;
+   case 'sparepart':
+    navigate('/sparepart');
+    break;
    case 'layanan':
     navigate('/layanan');
     break;

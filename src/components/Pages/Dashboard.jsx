@@ -15,6 +15,7 @@ import DataKendaraan from './DataKendaraan';
 import Servis from './Servis';
 import Riwayat from './Riwayat';
 import Laporan from './Laporan';
+import Sparepart from './Sparepart';
 
 
 const Dashboard = ({ initialMenuId = 'dashboard' }) => {
@@ -68,12 +69,10 @@ const Dashboard = ({ initialMenuId = 'dashboard' }) => {
   switch (activeMenuId) {
    case 'dashboard':
     return <DashboardContent />;
+   case 'sparepart':
+    return <Sparepart />;
    case 'layanan':
-    return (
-     <Layanan
-    
-     />
-    );
+    return <Layanan />;
    case 'kendaraan':
     return <DataKendaraan />;
    case 'servis':

@@ -5,15 +5,13 @@ import { useEffect, useState } from 'react';
 const PRIMARY_COLOR = 'indigo';
 
 const DashboardContent = () => {
-   const [totalPendapatan, setTotalPendapatan] = useState(0);
+   const [totalSparepart, setTotalSparepart] = useState(0);
   const [totalKendaraan, setTotalKendaraan] = useState(0);
   const [servisBerat, setServisBerat] = useState(0);
   const [analisis, setAnalisis] = useState([]);
   const [layanan, setLayanan] = useState([]);
 
-  useEffect(() => {
-    fetchDashboard();
-  }, []);
+ 
 
   const maxTotal = Math.max(...analisis.map(a => a.total));
 
@@ -27,14 +25,19 @@ const DashboardContent = () => {
     .from("layanan")
     .select("id, nama_layanan, harga")
 
+  const {data: sparepart} = await supabase
+    .from("sparepart")
+    .select("*")
+    .order("created_at", { ascending: false });
+
   if (booking) {
     // total pendapatan
-    setTotalPendapatan(
-      booking.reduce(
-        (sum, b) => sum + Number(b.total_biaya || 0),
-        0
-      )
-    );
+    // setTotalPendapatan(
+    //   booking.reduce(
+    //     (sum, b) => sum + Number(b.total_biaya || 0),
+    //     0
+    //   )
+    // );
 
     // kendaraan unik
     setTotalKendaraan(
@@ -58,8 +61,12 @@ const DashboardContent = () => {
   }
 
   setLayanan(layananData || []);
+  setTotalSparepart(sparepart.length);
 };
 
+ useEffect(() => {
+    fetchDashboard();
+  }, []);
   return (
     <div className="w-full text-gray-800">
 
@@ -91,12 +98,12 @@ const DashboardContent = () => {
           {/* Total Pendapatan */}
           <div className="px-4">
             <span className="text-xs font-bold text-gray-400 uppercase">
-              Total Pendapatan Servis
+              Total Sparepart
             </span>
             <div className="mt-1 flex items-baseline gap-1">
-              <span className="text-sm text-gray-500">Rp</span>
+              
               <span className={`text-2xl font-bold text-${PRIMARY_COLOR}-600`}>
-                {totalPendapatan.toLocaleString("id-ID")}
+                {totalSparepart}
               </span>
             </div>
           </div>

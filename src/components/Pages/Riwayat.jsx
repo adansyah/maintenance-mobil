@@ -111,7 +111,7 @@ function Riwayat() {
   {groupedRiwayat.map((item) => (
     <div
       key={item.key}
-      className="bg-white border rounded-xl p-5 shadow-sm"
+      className="bg-white border border-zinc-200 shadow-lg rounded-xl p-5"
     >
       <div className="flex justify-between items-start mb-2">
         <div>

@@ -28,6 +28,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* DASHBOARD */}
+        <Route
+          path="/sparepart"
+          element={
+            <ProtectedRoute>
+            <Dashboard initialMenuId="sparepart" />
+            </ProtectedRoute>
+          }
+        />
         {/* LAYANAN */}
         <Route
           path="/layanan"

@@ -55,10 +55,10 @@ function Laporan() {
   };
 
   // ================= TOTAL =================
-  const totalPendapatan = laporan.reduce(
-    (sum, item) => sum + Number(item.total_biaya),
-    0
-  );
+  // const totalPendapatan = laporan.reduce(
+  //   (sum, item) => sum + Number(item.total_biaya),
+  //   0
+  // );
 
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-8">
@@ -77,7 +77,7 @@ function Laporan() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
         {/* FILTER */}
-        <div className="bg-white border rounded-xl p-5 shadow-sm">
+        <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-lg">
           <h3 className="font-semibold mb-4">Filter Periode</h3>
 
           <div className="space-y-3">
@@ -87,7 +87,7 @@ function Laporan() {
               onChange={(e) =>
                 setFilter({ ...filter, dari: e.target.value })
               }
-              className="w-full border rounded-lg px-3 py-2"
+              className="w-full border border-zinc-200 text-gray-500 shadow-md rounded-lg px-3 py-2"
             />
 
             <input
@@ -96,7 +96,7 @@ function Laporan() {
               onChange={(e) =>
                 setFilter({ ...filter, sampai: e.target.value })
               }
-              className="w-full border rounded-lg px-3 py-2"
+              className="w-full border border-zinc-200 text-gray-500 shadow-md rounded-lg px-3 py-2"
             />
 
             <button
@@ -109,7 +109,7 @@ function Laporan() {
         </div>
 
         {/* TOTAL SERVIS */}
-        <div className="bg-white border rounded-xl p-5 shadow-sm flex flex-col justify-center">
+        <div className="bg-white border border-zinc-200  rounded-xl p-5 shadow-lg flex flex-col justify-center">
           <span className="text-xs text-gray-500 uppercase font-semibold">
             Total Servis Selesai
           </span>
@@ -119,32 +119,32 @@ function Laporan() {
         </div>
 
         {/* TOTAL PENDAPATAN */}
-        <div className="bg-white border rounded-xl p-5 shadow-sm flex flex-col justify-center">
+        {/* <div className="bg-white border rounded-xl p-5 shadow-sm flex flex-col justify-center">
           <span className="text-xs text-gray-500 uppercase font-semibold">
             Total Pendapatan
           </span>
           <span className="text-3xl font-bold text-indigo-600 mt-2">
             Rp {totalPendapatan.toLocaleString("id-ID")}
           </span>
-        </div>
+        </div> */}
       </div>
 
       {/* TABLE */}
       <div className="bg-white border rounded-xl shadow-sm overflow-x-auto">
         <table className="min-w-full text-sm">
-          <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
+          <thead className="bg-gray-100 text-gray-600 uppercase text-xs text-center">
             <tr>
-              <th className="px-4 py-3 text-left">Tanggal</th>
-              <th className="px-4 py-3 text-left">Kendaraan</th>
-              <th className="px-4 py-3 text-left">Layanan</th>
-              <th className="px-4 py-3 text-right">Total</th>
-              <th className="px-4 py-3 text-center">Status</th>
+              <th className="px-4 py-3">Tanggal</th>
+              <th className="px-4 py-3">Kendaraan</th>
+              <th className="px-4 py-3">Layanan</th>
+              <th className="px-4 py-3">Total</th>
+              <th className="px-4 py-3">Status</th>
             </tr>
           </thead>
 
           <tbody>
             {laporan.map((item) => (
-              <tr key={item.id} className="border-t">
+              <tr key={item.id} className="border-t text-center">
                 <td className="px-4 py-3">
                   {item.tanggal_servis}
                 </td>
@@ -155,10 +155,10 @@ function Laporan() {
                 <td className="px-4 py-3">
                   {item.layanan.nama_layanan}
                 </td>
-                <td className="px-4 py-3 text-right font-semibold">
+                <td className="px-4 py-3  font-semibold">
                   Rp {Number(item.layanan.harga).toLocaleString("id-ID")}
                 </td>
-                <td className="px-4 py-3 text-center">
+                <td className="px-4 py-3 ">
                   <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">
                     Selesai
                   </span>
