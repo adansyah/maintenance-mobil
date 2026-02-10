@@ -10,7 +10,6 @@ function Riwayat() {
     fetchRiwayat();
   }, []);
 
-  // ================= FETCH RIWAYAT =================
   const fetchRiwayat = async () => {
     setLoading(true);
 
@@ -42,7 +41,7 @@ function Riwayat() {
     setLoading(false);
   };
 
-  // ================= UPDATE STATUS =================
+  // update status
   const tandaiSelesaiGroup = async (ids) => {
   const { error } = await supabase
     .from("booking")

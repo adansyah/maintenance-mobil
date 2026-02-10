@@ -14,7 +14,6 @@ function Laporan() {
     fetchLaporan();
   }, []);
 
-  // ================= FETCH LAPORAN =================
   const fetchLaporan = async () => {
     setLoading(true);
 
@@ -54,7 +53,6 @@ function Laporan() {
     setLoading(false);
   };
 
-  // ================= TOTAL =================
   // const totalPendapatan = laporan.reduce(
   //   (sum, item) => sum + Number(item.total_biaya),
   //   0

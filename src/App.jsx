@@ -28,7 +28,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* DASHBOARD */}
+        {/* SPAREPART */}
         <Route
           path="/sparepart"
           element={

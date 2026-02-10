@@ -11,8 +11,6 @@ const DashboardContent = () => {
   const [analisis, setAnalisis] = useState([]);
   const [layanan, setLayanan] = useState([]);
 
- 
-
   const maxTotal = Math.max(...analisis.map(a => a.total));
 
   const fetchDashboard = async () => {

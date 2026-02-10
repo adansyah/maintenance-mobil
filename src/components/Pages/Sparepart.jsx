@@ -17,7 +17,7 @@ const Sparepart = () => {
     gambar: "",
   });
 
-  // ================= AUTO KODE =================
+  // generate kode
   const generateKode = async () => {
     const { data } = await supabase
       .from("sparepart")
@@ -31,7 +31,7 @@ const Sparepart = () => {
     return `SP_${String(last + 1).padStart(4, "0")}`;
   };
 
-  // ================= GET DATA =================
+ 
   const fetchData = async () => {
     const { data } = await supabase
       .from("sparepart")
@@ -45,7 +45,7 @@ const Sparepart = () => {
     fetchData();
   }, []);
 
-  // ================= UPLOAD IMAGE =================
+  // upload image
   const uploadImage = async () => {
     if (!file) return form.gambar;
 
@@ -66,7 +66,7 @@ const Sparepart = () => {
     return data.publicUrl;
   };
 
-  // ================= SUBMIT =================
+  // submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -103,13 +103,13 @@ const Sparepart = () => {
     setShowModal(false);
   };
 
-  // ================= EDIT =================
+  // edit
   const handleEdit = (item) => {
     setForm(item);
     setShowModal(true);
   };
 
-  // ================= DELETE =================
+  // delete
   const handleDelete = async (id) => {
     if (!confirm("Hapus sparepart?")) return;
     await supabase.from("sparepart").delete().eq("id", id);

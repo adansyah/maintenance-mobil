@@ -1,8 +1,6 @@
-// src/components/Dashboard/Dashboard.jsx
 import React, { useState } from 'react';
 
-import { MENU_ITEMS, BG_COLOR } from '../../data/constants'; // Hapus PRIMARY_COLOR, MODES jika tidak digunakan
-// Pastikan komponen ini sudah diimpor dan path-nya benar:
+import { MENU_ITEMS, BG_COLOR } from '../../data/constants';
 import Sidebar from '../Layout/Sidebar'; 
 import Header from '../Layout/Header'; 
 import DashboardContent from './DashboardContent';
@@ -22,19 +20,16 @@ const Dashboard = ({ initialMenuId = 'dashboard' }) => {
 
  const [activeMenuId, setActiveMenuId] = useState(initialMenuId);
   
-  // 🎯 STATE BARU: Untuk mengontrol visibilitas sidebar di mobile
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); 
 
  const handleMenuClick = (id) => {
   setActiveMenuId(id);
  };
   
-  // 🎯 FUNGSI BARU: Untuk membuka/menutup sidebar
   const handleToggleSidebar = () => {
     setIsSidebarOpen(prev => !prev);
   };
   
-  // 🎯 FUNGSI BARU: Untuk menutup sidebar (dipanggil dari Sidebar.jsx)
   const handleCloseSidebar = () => {
     setIsSidebarOpen(false);
   };
@@ -81,10 +76,6 @@ const Dashboard = ({ initialMenuId = 'dashboard' }) => {
     return <Riwayat />;
    case 'laporan':
     return <Laporan />;
-  //  case 'laporan':
-  //   return <Laporan />;
-  //  case 'user':
-  //   return <UserContent />;
       default:
         return <DashboardContent />;
   }

@@ -1,4 +1,3 @@
-// File: src/components/Layout/Sidebar.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MENU_ITEMS } from '../../data/constants';
@@ -16,7 +15,6 @@ const Sidebar = ({ activeMenuId, onMenuItemClick, isOpen, onClose }) => {
   // 2. Tutup sidebar jika di mobile
   onClose && onClose(); 
 
-  // 3. Navigasi
   switch (item.id) {
    case 'beranda':
     navigate('/dashboard');

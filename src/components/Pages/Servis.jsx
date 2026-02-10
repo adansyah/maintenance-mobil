@@ -11,7 +11,7 @@ function Servis() {
   const [catatan, setCatatan] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ================= FETCH DATA =================
+ 
   useEffect(() => {
     fetcVechile();
     fetchService();
@@ -35,7 +35,7 @@ function Servis() {
     if (!error) setServices(data);
   };
 
-  // ================= LOGIC =================
+//  logic
   const toggleService = (service) => {
     setSelectedServices((prev) =>
       prev.find((s) => s.id === service.id)
@@ -49,7 +49,7 @@ function Servis() {
     0
   );
 
-  // ================= SUBMIT =================
+  // submit
  const handleSubmit = async (e) => {
   e.preventDefault();
   setLoading(true);
@@ -90,7 +90,6 @@ function Servis() {
 };
 
 
-  // ================= UI =================
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-8">
       <div className="max-w-1xl mx-auto">

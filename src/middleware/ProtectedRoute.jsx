@@ -15,7 +15,7 @@ function ProtectedRoute({ children }) {
 
   if (loading) return null; // bisa ganti spinner
 
-  //  belum login → lempar ke login
+  //  belum login → ke login
   if (!session) {
     return <Navigate to="/" replace />;
   }

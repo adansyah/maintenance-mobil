@@ -15,7 +15,7 @@ function GuestRoute({ children }) {
 
   if (loading) return null;
 
-  //  sudah login → lempar ke dashboard
+  //  sudah login → ke dashboard
   if (session) {
     return <Navigate to="/dashboard" replace />;
   }

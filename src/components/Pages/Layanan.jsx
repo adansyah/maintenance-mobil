@@ -36,7 +36,7 @@ function Layanan() {
     fetchData();
   }, [fetchData]);
 
-  /* ================= HANDLE FORM ================= */
+  // Handle form
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -54,7 +54,7 @@ function Layanan() {
     return true;
   };
 
-  /* ================= CREATE & UPDATE ================= */
+  // create udpdate
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -74,14 +74,14 @@ function Layanan() {
     fetchData();
   };
 
-  /* ================= DELETE ================= */
+  // delete
   const handleDelete = async (id) => {
     if (!confirm("Yakin hapus layanan ini?")) return;
     await supabase.from("layanan").delete().eq("id", id);
     fetchData();
   };
 
-  /* ================= EDIT ================= */
+  // edit
   const handleEdit = (service) => {
     setForm(service);
     setEditId(service.id);
